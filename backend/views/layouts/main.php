@@ -4,6 +4,7 @@
 /* @var $content string */
 
 use backend\assets\AppAsset;
+use backend\assets\BootboxAsset;
 use yii\helpers\Html;
 use yii\bootstrap\Nav;
 use yii\bootstrap\NavBar;
@@ -11,6 +12,9 @@ use yii\widgets\Breadcrumbs;
 use common\widgets\Alert;
 
 AppAsset::register($this);
+BootboxAsset::overrideSystemConfirm();
+$this->registerAssetBundle(skinka\widgets\gritter\GritterAsset::className());
+$this->title = $this->context->title;
 ?>
 <?php $this->beginPage() ?>
 <!DOCTYPE html>
@@ -60,9 +64,9 @@ AppAsset::register($this);
     ?>
 
     <div class="container">
-        <?= Breadcrumbs::widget([
-            'links' => isset($this->params['breadcrumbs']) ? $this->params['breadcrumbs'] : [],
-        ]) ?>
+	    <?= Breadcrumbs::widget([
+		    'links' => isset($this->params['breadcrumbs']) ? $this->params['breadcrumbs'] : $this->context->breadcrumbs,
+	    ]) ?>
         <?= Alert::widget() ?>
         <?= $content ?>
     </div>
@@ -75,7 +79,16 @@ AppAsset::register($this);
         <p class="pull-right"><?= Yii::powered() ?></p>
     </div>
 </footer>
-
+<?php
+yii\bootstrap\Modal::begin([
+	'id' => 'modal-form-ajax',
+	'header' => '<h4 class="caption-subject bold uppercase font-red-sunglo"></h4>',
+	'size' => 'modal-lg',
+	'clientOptions' => ['backdrop' => 'static', 'keyboard' => FALSE, 'tabindex'=> 1, 'data-focus-on'=>'input:first'],
+	'headerOptions' => ['class'=>'bg-primary']
+]);
+yii\bootstrap\Modal::end();
+?>
 <?php $this->endBody() ?>
 </body>
 </html>

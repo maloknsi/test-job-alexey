@@ -1,6 +1,7 @@
 <?php
 return [
-    'aliases' => [
+	'language' => 'ru-RU',
+	'aliases' => [
         '@bower' => '@vendor/bower-asset',
         '@npm'   => '@vendor/npm-asset',
     ],
@@ -9,5 +10,12 @@ return [
         'cache' => [
             'class' => 'yii\caching\FileCache',
         ],
+	    'authManager' => [
+		    'class' => 'yii\rbac\PhpManager',
+		    'itemFile' => '@common/components/rbac/items.php',
+		    'assignmentFile' => '@common/components/rbac/assignments.php',
+		    'ruleFile' => '@common/components/rbac/rules.php',
+		    'defaultRoles' => ['admin', 'moderator', 'user'],
+	    ],
     ],
 ];

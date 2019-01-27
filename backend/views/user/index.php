@@ -1,49 +1,83 @@
 <?php
 
+use common\models\User;
+use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
 use yii\grid\GridView;
-
+use yii\helpers\Url;
+use yii\widgets\Pjax;
 /* @var $this yii\web\View */
+/* @var $searchModel backend\models\UserSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
-
-$this->title = 'Users';
-$this->params['breadcrumbs'][] = $this->title;
+/* @var $data common\models\User */
 ?>
 <div class="user-index">
+	<?php Pjax::begin(['id' => 'user-grid', 'timeout' => 240000, 'enablePushState' => false]); ?>
+	<?= Html::button('Добавить', [
+		'class' => 'btn btn-success btn-show-modal-form',
+		'title' => 'Добавить',
+		'data-action-url' => Url::to('/user/edit'),
+	]); ?>
+	<?= GridView::widget([
+		'layout' => "{summary}\n{pager}\n{items}\n{pager}\n{summary}",
+		'formatter' => ['class' => 'yii\i18n\Formatter', 'nullDisplay' => '-'],
+		'options' => ['class' => ['table-report-detailed','grid-view']],
+		'dataProvider' => $dataProvider,
+		'filterModel' => $searchModel,
+		'columns' => [
+			'id',
+			'fullName',
+			'address',
+			'username',
+			[
+				'attribute' => 'role',
+				'content' => function ($data) {	return User::getRoleLabel($data->role);},
+				'filter' => User::getRoles(),
+				'headerOptions'=>['style'=>'min-width: 125px;']
+			],
+			[
+				'attribute' => 'status',
+				'content' => function ($data) {	return User::getStatusLabel($data->status);},
+				'filter' => Html::activeDropDownList(
+					$searchModel,
+					'status',
+					ArrayHelper::merge(array('' => ''), User::getStatuses()),
+					['class' => 'form-control']
+				),
+				'headerOptions'=>['style'=>'min-width: 155px;']
+			],
+			[
+				'class' => 'yii\grid\ActionColumn',
+				'template' => '{update}',
+				'contentOptions'=>['style'=> 'text-align: center'],
+				'buttons' => [
+					/** @var User $model */
+					'update' => function ($url, $model, $key) {
+						return Html::a('<span class="glyphicon glyphicon-pencil"></span>', '#', [
+							'title' => 'Редактировать',
+							'class' => 'btn-show-modal-form',
+							'data-action-url' => Url::to(['/user/edit', 'id' => $model->id]),
+						]);
+					},
+				],
+			],
+			[
+				'class' => 'yii\grid\ActionColumn',
+				'template' => '{delete}',
+				'contentOptions'=>['style'=> 'text-align: center'],
+				'buttons' => [
+					'delete' => function ($url, $model) {
+						/** @var User $model */
+						return Html::a('<span class="glyphicon glyphicon-trash button-action-delete"></span>', 'javascript:;', [
+							'title' => 'Удалить этот элемент',
+							'class' => 'btn-show-confirm-form',
+							'data-action-url' => Url::to(['delete', 'id' => $model->id]),
+						]);
+					},
+				],
+			],
 
-    <h1><?= Html::encode($this->title) ?></h1>
-
-    <p>
-        <?= Html::a('Create User', ['create'], ['class' => 'btn btn-success']) ?>
-    </p>
-
-    <?= GridView::widget([
-        'dataProvider' => $dataProvider,
-        'columns' => [
-            ['class' => 'yii\grid\SerialColumn'],
-
-            'id',
-            'username',
-            'auth_key',
-            'password_hash',
-            'password_reset_token',
-            //'email:email',
-            //'status',
-            //'created_at',
-            //'updated_at',
-            //'user_auth_token',
-            //'sms_code',
-            //'fullName',
-            //'firstName',
-            //'lastName',
-            //'middleName',
-            //'birthDate',
-            //'logo',
-            //'address',
-            //'city',
-            //'role',
-
-            ['class' => 'yii\grid\ActionColumn'],
-        ],
-    ]); ?>
+		],
+	]); ?>
+	<?php Pjax::end(); ?>
 </div>

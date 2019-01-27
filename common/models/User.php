@@ -20,14 +20,30 @@ use yii\web\IdentityInterface;
  * @property integer $created_at
  * @property integer $updated_at
  * @property string $password write-only password
- */
+ * @property string $user_auth_token
+ * @property string $sms_code
+ * @property string $fullName
+ * @property string $firstName
+ * @property string $lastName
+ * @property string $middleName
+ * @property string $birthDate
+ * @property string $logo
+ * @property string $address
+ * @property string $city
+ * @property int $role
+*/
 class User extends ActiveRecord implements IdentityInterface
 {
     const STATUS_DELETED = 0;
     const STATUS_ACTIVE = 10;
 
+	const ROLE_GUEST = 0;
+	const ROLE_USER = 1;
+	const ROLE_MODERATOR = 2;
+	const ROLE_ADMIN = 4;
+	public $new_password;
 
-    /**
+	/**
      * {@inheritdoc}
      */
     public static function tableName()
@@ -53,6 +69,16 @@ class User extends ActiveRecord implements IdentityInterface
         return [
             ['status', 'default', 'value' => self::STATUS_ACTIVE],
             ['status', 'in', 'range' => [self::STATUS_ACTIVE, self::STATUS_DELETED]],
+	        [['username', 'email', 'created_at', 'updated_at', 'fullName', 'firstName', 'lastName', 'middleName', 'address', 'city'], 'required'],
+	        [['status', 'created_at', 'updated_at', 'role'], 'integer'],
+	        [['birthDate'], 'safe'],
+	        [['username', 'password_hash', 'password_reset_token', 'email', 'user_auth_token', 'fullName', 'logo', 'address', 'city'], 'string', 'max' => 255],
+	        [['auth_key'], 'string', 'max' => 32],
+	        [['sms_code'], 'string', 'max' => 6],
+	        [['firstName', 'lastName', 'middleName', 'new_password'], 'string', 'max' => 50],
+	        [['username'], 'unique'],
+	        [['email'], 'unique'],
+	        [['password_reset_token'], 'unique'],
         ];
     }
 
@@ -80,7 +106,7 @@ class User extends ActiveRecord implements IdentityInterface
      */
     public static function findByUsername($username)
     {
-        return static::findOne(['username' => $username, 'status' => self::STATUS_ACTIVE]);
+        return static::findOne(['email' => $username, 'status' => self::STATUS_ACTIVE]);
     }
 
     /**
@@ -186,4 +212,101 @@ class User extends ActiveRecord implements IdentityInterface
     {
         $this->password_reset_token = null;
     }
+
+	public function attributeLabels()
+	{
+		return [
+			'id' => 'ID',
+			'username' => 'Пользователь',
+			'auth_key' => 'Auth Key',
+			'password_hash' => 'Password Hash',
+			'password_reset_token' => 'Password Reset Token',
+			'email' => 'Email',
+			'status' => 'Статус',
+			'created_at' => 'Created At',
+			'updated_at' => 'Updated At',
+			'user_auth_token' => 'User Auth Token',
+			'sms_code' => 'Sms Code',
+			'fullName' => 'ФИО',
+			'firstName' => 'Имя',
+			'lastName' => 'Фамилия',
+			'middleName' => 'Отчество',
+			'birthDate' => 'Birth Date',
+			'logo' => 'Logo',
+			'address' => 'Адресс',
+			'city' => 'Город',
+			'role' => 'Доступ',
+		];
+	}
+	/**
+	 * @return array user roles
+	 */
+	public static function getRoles()
+	{
+		return [
+			self::ROLE_ADMIN => 'Админ',
+			self::ROLE_USER => 'Пользователь',
+			self::ROLE_MODERATOR => 'Менеджер',
+		];
+	}
+
+	/**
+	 * @param $roleId int
+	 * @return string
+	 */
+	public static function getRoleLabel($roleId)
+	{
+		return self::getRoles()[$roleId];
+	}
+
+	/**
+	 * @return array user roles
+	 */
+	public static function getStatuses()
+	{
+		return [
+			self::STATUS_ACTIVE => 'Активный',
+			self::STATUS_DELETED => 'Заблокирован',
+		];
+	}
+
+	/**
+	 * @param $statusId int
+	 * @return string
+	 */
+	public static function getStatusLabel($statusId)
+	{
+		return self::getStatuses()[$statusId];
+	}
+
+	/**
+	 * @param $roles
+	 * @return bool
+	 */
+	public static function checkAccess($roles)
+	{
+		$result = false;
+		$roleIdentity = User::ROLE_GUEST;
+		if (!Yii::$app->user->isGuest) {
+			$roleIdentity = Yii::$app->user->identity->role;
+		}
+		if (in_array($roleIdentity, $roles)) {
+			$result = true;
+		}
+		return $result;
+	}
+
+	/**
+	 * @param $runValidation bool
+	 * @param $attributeNames bool
+	 * @return bool|void
+	 */
+	public function save($runValidation = true, $attributeNames = null)
+	{
+			if ($this->new_password) {
+				$this->setPassword($this->new_password);
+			}
+			return parent::save($runValidation, $attributeNames);
+	}
+
 }

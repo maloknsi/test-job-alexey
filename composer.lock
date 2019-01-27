@@ -4,8 +4,27 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "630d5f1d19e73b0163f900453171fba5",
+    "content-hash": "1d4beae6217cc62a41462eaa90d90dec",
     "packages": [
+        {
+            "name": "bower-asset/bootbox",
+            "version": "v4.4.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/makeusabrew/bootbox.git",
+                "reference": "cb756203e250ed0ff2539359ff0ad1c3ffb8e8d3"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/makeusabrew/bootbox/zipball/cb756203e250ed0ff2539359ff0ad1c3ffb8e8d3",
+                "reference": "cb756203e250ed0ff2539359ff0ad1c3ffb8e8d3",
+                "shasum": null
+            },
+            "require": {
+                "bower-asset/bootstrap": ">=3.0.0"
+            },
+            "type": "bower-asset"
+        },
         {
             "name": "bower-asset/bootstrap",
             "version": "v3.3.7",
@@ -68,6 +87,25 @@
             "license": [
                 "MIT"
             ]
+        },
+        {
+            "name": "bower-asset/jquery.gritter",
+            "version": "1.7.4",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/jboesch/Gritter.git",
+                "reference": "7f0c27823f8862ad22860420d26eca933e60169d"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/jboesch/Gritter/zipball/7f0c27823f8862ad22860420d26eca933e60169d",
+                "reference": "7f0c27823f8862ad22860420d26eca933e60169d",
+                "shasum": null
+            },
+            "require": {
+                "bower-asset/jquery": ">=1.8.2"
+            },
+            "type": "bower-asset"
         },
         {
             "name": "bower-asset/punycode",
@@ -324,6 +362,52 @@
                 "html"
             ],
             "time": "2018-02-23T01:58:20+00:00"
+        },
+        {
+            "name": "skinka/yii2-alert-gritter",
+            "version": "1.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Skinka/yii2-alert-gritter.git",
+                "reference": "7959674fbeb3ec8be72f41f21a0a1ecf8f4f0c97"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Skinka/yii2-alert-gritter/zipball/7959674fbeb3ec8be72f41f21a0a1ecf8f4f0c97",
+                "reference": "7959674fbeb3ec8be72f41f21a0a1ecf8f4f0c97",
+                "shasum": ""
+            },
+            "require": {
+                "bower-asset/jquery.gritter": "*",
+                "php": ">=5.4.0",
+                "yiisoft/yii2": "~2.0",
+                "yiisoft/yii2-bootstrap": "*"
+            },
+            "type": "yii2-extension",
+            "autoload": {
+                "psr-4": {
+                    "skinka\\widgets\\gritter\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Skinka",
+                    "email": "skink@yandex.ru"
+                }
+            ],
+            "description": "Gritter. Popup messages",
+            "homepage": "http://github.com/skinka/yii2-alert-gritter",
+            "keywords": [
+                "alert",
+                "gritter",
+                "messages",
+                "yii2"
+            ],
+            "time": "2015-09-13T05:36:53+00:00"
         },
         {
             "name": "swiftmailer/swiftmailer",
