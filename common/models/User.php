@@ -30,6 +30,7 @@ use yii\web\IdentityInterface;
  * @property string $logo
  * @property string $address
  * @property string $city
+ * @property string $phone
  * @property int $role
 */
 class User extends ActiveRecord implements IdentityInterface
@@ -73,7 +74,7 @@ class User extends ActiveRecord implements IdentityInterface
 	        [['status', 'created_at', 'updated_at', 'role'], 'integer'],
 	        [['birthDate'], 'safe'],
 	        [['username', 'password_hash', 'password_reset_token', 'email', 'user_auth_token', 'fullName', 'logo', 'address', 'city'], 'string', 'max' => 255],
-	        [['auth_key'], 'string', 'max' => 32],
+	        [['auth_key', 'phone'], 'string', 'max' => 32],
 	        [['sms_code'], 'string', 'max' => 6],
 	        [['firstName', 'lastName', 'middleName', 'new_password'], 'string', 'max' => 50],
 	        [['username'], 'unique'],
