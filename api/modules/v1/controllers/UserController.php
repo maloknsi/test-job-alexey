@@ -70,6 +70,7 @@ class UserController extends Controller
 						}
 					} else {
 						$user->generateSmsCode();
+						$user->save();
 						$return['message'] = "На номер телефона {$phone} выслана sms с кодом";
 					}
 				} else {
